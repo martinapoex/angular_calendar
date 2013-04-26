@@ -1,8 +1,6 @@
-h1 Kalender
+.span2
+  h1 Kalender
+  a.btn.btn-primary.btn-block.resource(href="#", ng-repeat="resource in resources", draggable-resource="{helper: 'clone'}", style="width: 200px; z-index: 1000;", data-name="{{resource}}") {{resource}}
 
-.row
-  .span1 a
-  .span1 a
-  .span1 a
-  .span1 a
-  .span1 a
+.span10
+  div.calendar(ui-calendar="calendarOptions", ng-model="eventSources")

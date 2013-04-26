@@ -10,43 +10,30 @@ angular.module("app.controllers", []).controller("AppCtrl", ["$scope", "$locatio
       "active"
     else
       ""
-]).controller("MyCtrl1", ["$scope", ($scope) ->
-  $scope.onePlusOne = 2
-
 ]).controller("CalendarCtrl", ["$scope", ($scope) ->
-  $scope
+  $scope.events = []
+  $scope.calendarOptions = 
+    height: 650
+    editable: true
+    defaultView: 'agendaWeek'
+    timeFormat: 'H(:mm)'
+    agenda: 'h:mm{ - h:mm}'
+    droppable: true
+    dropAccept: '.resource'
+    drop: (date, allDay, jsEvent, ui) ->
+      $scope.addEvent({ title: $(jsEvent.target).data('name'), start: date, allDay: allDay })
+      $('.calendar').fullCalendar( 'refetchEvents' )
 
+  $scope.eventSource =
+    #url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic"
 
-]).controller("MyCtrl2", ["$scope", ($scope) ->
-  $scope
-]).controller "TodoCtrl", ["$scope", ($scope) ->
-  $scope.todos = [
-    text: "learn angular"
-    done: true
-  ,
-    text: "build an angular app"
-    done: false
-  ]
-  $scope.addTodo = ->
-    $scope.todos.push
-      text: $scope.todoText
-      done: false
+  $scope.resources = ['Unddel' ,'Tyor' ,'Tasale' ,'Torild' ,'Aromo' ,'Lugesy' ,'Itch' ,'Samor' ,'Untount' ,'Kimlerdan' ,'Arducer' ,'Umaugh' ,'Mitaiar' ,'Analedra']
+  
+  $scope.eventSources = [$scope.events, $scope.eventSource]
 
-    $scope.todoText = ""
-
-  $scope.remaining = ->
-    count = undefined
-    count = 0
-    angular.forEach $scope.todos, (todo) ->
-      count += ((if todo.done then 0 else 1))
-
-    count
-
-  $scope.archive = ->
-    oldTodos = undefined
-    oldTodos = $scope.todos
-    $scope.todos = []
-    angular.forEach oldTodos, (todo) ->
-      $scope.todos.push todo  unless todo.done
-
-]
+  $scope.addEvent = (data) ->
+    $scope.events.push
+      title: data.title
+      start: new Date(data.start)
+      allDay: data.allDay
+])
