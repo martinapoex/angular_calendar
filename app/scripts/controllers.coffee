@@ -10,7 +10,7 @@ angular.module("app.controllers", []).controller("AppCtrl", ["$scope", "$locatio
       "active"
     else
       ""
-]).controller("CalendarCtrl", ["$scope", ($scope) ->
+]).controller("CalendarCtrl", ["$scope", "Calendar", ($scope, Calendar) ->
   $scope.events = []
   $scope.calendarOptions = 
     height: 650
@@ -22,9 +22,23 @@ angular.module("app.controllers", []).controller("AppCtrl", ["$scope", "$locatio
     dropAccept: '.resource'
     drop: (date, allDay, jsEvent, ui) ->
       $scope.addEvent({ title: $(jsEvent.target).data('name'), start: date, allDay: allDay })
-      $('.calendar').fullCalendar( 'refetchEvents' )
+      $('.calendar').fullCalendar('refetchEvents')
 
-  $scope.eventSource =
+  $scope.fetchEvents = ->
+    $.getJSON 'https://apoex-meeting-room-api.herokuapp.com/events', (data) ->
+      items = data.items.map (item) ->
+        $scope.addEvent({
+          title: item.summary
+          start: new Date(item.start.dateTime)
+          end: new Date(item.end.dateTime)
+          allDay: false
+        })
+
+      $('.calendar').fullCalendar('refetchEvents')
+
+  $scope.fetchEvents()
+
+  #$scope.eventSource =
     #url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic"
 
   $scope.resources = ['Unddel' ,'Tyor' ,'Tasale' ,'Torild' ,'Aromo' ,'Lugesy' ,'Itch' ,'Samor' ,'Untount' ,'Kimlerdan' ,'Arducer' ,'Umaugh' ,'Mitaiar' ,'Analedra']
